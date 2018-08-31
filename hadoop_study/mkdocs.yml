@@ -1,0 +1,6 @@
+site_name: Tan's Docs
+pages:
+    - 简介: index.md
+    - About: about.md
+theme:
+  name: 'material'
