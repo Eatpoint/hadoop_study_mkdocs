@@ -1,6 +1,7 @@
 site_name: Tan's Docs
 pages:
     - 简介: index.md
+    - linux安装: linux_install_main.md
     - About: about.md
 theme:
   name: 'material'
