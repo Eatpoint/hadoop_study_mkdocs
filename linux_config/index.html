@@ -240,20 +240,13 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#_3" title="设置新用户" class="md-nav__link">
-    设置新用户
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" title="环境安装" class="md-nav__link">
+  <a href="#_3" title="环境安装" class="md-nav__link">
     环境安装
   </a>
   
@@ -277,6 +270,26 @@
     安装VNC server （可选）
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" title="配置防火墙：" class="md-nav__link">
+    配置防火墙：
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" title="Windows 连接到服务器" class="md-nav__link">
+    Windows 连接到服务器
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
       
@@ -287,6 +300,18 @@
   
 </nav>
     
+  </li>
+
+    
+      
+      
+      
+
+
+  <li class="md-nav__item">
+    <a href="../hadoop_install/" title="hadoop" class="md-nav__link">
+      hadoop
+    </a>
   </li>
 
     
@@ -344,20 +369,13 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#_3" title="设置新用户" class="md-nav__link">
-    设置新用户
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" title="环境安装" class="md-nav__link">
+  <a href="#_3" title="环境安装" class="md-nav__link">
     环境安装
   </a>
   
@@ -380,6 +398,26 @@
   <a href="#vnc-server" title="安装VNC server （可选）" class="md-nav__link">
     安装VNC server （可选）
   </a>
+  
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_5" title="配置防火墙：" class="md-nav__link">
+    配置防火墙：
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#windows" title="Windows 连接到服务器" class="md-nav__link">
+    Windows 连接到服务器
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -405,18 +443,138 @@
 <h2 id="_1">简单初始设置</h2>
 <hr />
 <h3 id="ip">配置固定IP地址</h3>
-<p>查看当前的IP地址，使用当期可用的IP地址作为固定IP。</p>
+<p>若使用图形界面，配置方式与Windows相似，以下说明如何使用终端命令行进行配置。</p>
+<p>使用nmcli命令查看当前连接的网路的网卡设备和ip，使用当前可用的IP地址作为固定IP。</p>
+<p>如下设备是em1，ip是123.228.23.144</p>
+<p><img alt="nmcli查看网络" src="../image/nmcli查看网络.jpg" /></p>
+<p>根据查到的设备名，修改其配置文件：</p>
+<pre><code>cd /etc/sysconfig/network-scripts/
+vi ifcfg-em1
+</code></pre>
+
+<p><img alt="修改网络配置文件" src="../image/修改网络配置文件.jpg" /></p>
 <h3 id="_2">配置主机名</h3>
 <p>设置主机用以便简单标识当前服务器的作用。</p>
-<h3 id="_3">设置新用户</h3>
-<p>设置用户作为权限管理。</p>
-<h2 id="_4">环境安装</h2>
+<pre><code>vi /etc/hostname
+</code></pre>
+
+<h2 id="_3">环境安装</h2>
 <h3 id="jdk">安装JDK</h3>
-<p>1.下载安装JDK
-2.配置Java环境变量</p>
+<p>首先获取想要安装的jdk的下载地址：</p>
+<h4 id="_4"><img alt="下载jdk" src="../image/下载jdk.jpg" /></h4>
+<p>下载jdk，地址替换为上面获取到的地址。</p>
+<pre><code>wget --header &quot;Cookie: oraclelicense=accept-securebackup-cookie&quot; http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm?AuthParam=1536111689_b0a0712c5034d511302f6a0111d70f2b
+</code></pre>
+
+<p>下载完成后安装</p>
+<pre><code>yum localinstall jdk-8u181-linux-x64.rpm
+</code></pre>
+
+<p>配置环境变量 </p>
+<pre><code>vi /etc/profile 
+</code></pre>
+
+<p>在最后添加：</p>
+<pre><code>export JAVA_HOME=/usr/java/default/
+export JRE_HOME=/usr/java/default/jre
+PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
+</code></pre>
+
+<p>使配置文件立刻生效</p>
+<pre><code>source /etc/profile
+</code></pre>
+
+<p>确认版本正确安装</p>
+<pre><code>echo $JAVA_HOME
+java -version
+</code></pre>
+
 <hr />
 <h2 id="vnc-server">安装VNC server （可选）</h2>
-<hr />
+<p>VNC是用于远程控制的工具软件，即可以远程到服务器的图形界面，所以需要linux系统安装有图形界面才会起到作用。</p>
+<p>服务器端需要安装配置VNC server。</p>
+<pre><code>yum install tigervnc-server -y      #CentOS/RHEL 6开始版本的安装
+
+yum install vnc-server -y           #如果是CentOS/RHEL 5，则执行此命令
+</code></pre>
+
+<p>安装成功后设置vnc的连接密码</p>
+<pre><code>vncpasswd
+</code></pre>
+
+<p>随后需要创建VNC的配置文件，复制已有的模板来修改。</p>
+<pre><code>cp /lib/systemd/system/vncserver@.service /lib/systemd/system/vncserver@:1.service
+cp /lib/systemd/system/vncserver@.service /lib/systemd/system/vncserver@:2.service
+</code></pre>
+
+<p>这里的vncserver@:1.service为root用户的登录配置文件，vncserver@:2.service为普通用户的配置文件</p>
+<p>使用vi编辑复制出来的文件：</p>
+<pre><code>vi /lib/systemd/system/vncserver@:1.service
+</code></pre>
+
+<p>主要修改<USER>和用户文件夹的路径：</p>
+<pre><code>[Unit]
+Description=Remote desktop service (VNC)
+After=syslog.target network.target
+
+[Service]
+Type=forking
+# Clean any existing files in /tmp/.X11-unix environment
+ExecStartPre=/bin/sh -c '/usr/bin/vncserver -kill %i &gt; /dev/null 2&gt;&amp;1 || :'
+
+ExecStart=/usr/sbin/runuser -l &lt;USER&gt; -c &quot;/usr/bin/vncserver %i&quot;
+#上面一行修改为：ExecStart=/usr/sbin/runuser -l root -c &quot;/usr/bin/vncserver %i&quot;
+PIDFile=/home/&lt;USER&gt;/.vnc/%H%i.pid
+#上面一行修改为：PIDFile=/root/.vnc/%H%i.pid
+
+ExecStop=/bin/sh -c '/usr/bin/vncserver -kill %i &gt; /dev/null 2&gt;&amp;1 || :'
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+<p>（关于vi的使用：按 i 进入编辑模式，修改好后按Esc退出编辑模式，输入：wq回车保存修改）</p>
+<p>vncserver@:2.service修改同理，也可不配置。</p>
+<p>修改完成后reload使文件生效：</p>
+<pre><code>systemctl daemon-reload
+</code></pre>
+
+<p>最后启动服务：</p>
+<pre><code>systemctl start vncserver@:1.service
+</code></pre>
+
+<p>设置开机启动：</p>
+<pre><code>systemctl enable vncserver@:1.service
+</code></pre>
+
+<h4 id="_5">配置防火墙：</h4>
+<p>防火墙可能会拦截掉远程连接，可以选择直接关闭防火墙，或者开放我们需要的连接端口，推荐后者。</p>
+<p>Centos 7 防火墙配置和Centos 6的有很大不同，本文档只针对Centos 7 的配置。</p>
+<p>查看防火墙的状态：</p>
+<pre><code>firewall-cmd --state 
+</code></pre>
+
+<p>1.关闭防火墙（不推荐）</p>
+<pre><code>#临时关闭
+systemctl stop firewalld
+#禁止开机启动
+systemctl disable firewalld
+</code></pre>
+
+<p>2.开放VNC可能用到的端口：</p>
+<pre><code>firewall-cmd --zone=public --add-service=vnc-server --permanent  
+#永久的把vnc-server服务加进防火墙
+
+firewall-cmd --zone=public --add-port=5901-5905/tcp --permanent    
+#永久的把该端口添加进防火墙
+
+firewall-cmd --reload    #重启防火墙，让刚才的设置生效
+</code></pre>
+
+<h4 id="windows">Windows 连接到服务器</h4>
+<p>在Windows下，安装VNC Viewer，输入正确IP地址：</p>
+<p><img alt="vnc连接" src="../image/vnc连接.jpg" /></p>
+<p>密码为之前设置的vncpasswd。</p>
                 
                   
                 
@@ -452,13 +610,13 @@
           </a>
         
         
-          <a href="../about/" title="About" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="../hadoop_install/" title="hadoop" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
               <span class="md-flex__ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                About
+                hadoop
               </span>
             </div>
             <div class="md-flex__cell md-flex__cell--shrink">
