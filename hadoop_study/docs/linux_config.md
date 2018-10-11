@@ -22,13 +22,70 @@ vi ifcfg-em1
 
 ![修改网络配置文件](image/修改网络配置文件.jpg)
 
+根据实际情况修改，供参考：
+
+```
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=static	#使用静态ip
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=em1
+UUID=f85cd7cd-6b63-490e-ae0d-053dc7e0f11a
+DEVICE=em1
+ONBOOT=yes		#启动网络
+ZONE=public
+IPADDR=123.228.23.144		#IP地址
+PREFIX=24
+GATEWAY=123.228.23.254
+DNS1=10.32.244.145
+DNS2=10.32.244.134
+PEERDNS=no
+NM_CONTROLLED=no
+```
 
 ### 配置主机名
+
 设置主机用以便简单标识当前服务器的作用。
 
 ```
+//修改用户当前的主机
 vi /etc/hostname
 ```
+
+修改后重启生效。
+
+```
+//增加ip的别名，方便ssh连接
+vi /etc/hosts	
+```
+
+
+### 配置免密登录
+
+```
+#生成秘钥
+ssh-keygen -t rsa
+#复制公钥到需要免密的机器目录下
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.100
+```
+
+注意写用户名@ip。
+
+SSH进行认证的过程中除了对用户目录有权限要求外，对 **.ssh** 文件夹和 **authorized_keys** 文件同样也要限制，如果日志中提示这两个的问题，可以通过如下方式进行修改：
+
+```
+chmod 700 /home/skyler/.ssh 
+chmod 600 /home/skyler/.ssh/authorized_keys
+```
+
+
 
 ## 环境安装
 
@@ -36,7 +93,7 @@ vi /etc/hostname
 
 首先获取想要安装的jdk的下载地址：
 
-#### ![下载jdk](image\下载jdk.jpg)
+![下载jdk](image\下载jdk.jpg)
 
 下载jdk，地址替换为上面获取到的地址。
 
@@ -78,6 +135,28 @@ java -version
 ```
 
 ---
+## 配置是否启动图形界面
+
+新版本的CentOS 系统里使用’targets’ 取代了运行级别的概念。系统有两种默认的’targets’: 多用户.target 对应之前版本的3 运行级别； 而图形.target 对应之前的5运行级别。
+
+查看默认的target，执行：
+
+```
+systemctl get-default
+```
+
+开机以命令模式启动，执行：
+
+```
+systemctl set-default multi-user.target
+```
+
+开机以图形界面启动，执行：
+
+```
+systemctl set-default graphical.target
+```
+
 ## 安装VNC server （可选）
 
 VNC是用于远程控制的工具软件，即可以远程到服务器的图形界面，所以需要linux系统安装有图形界面才会起到作用。
