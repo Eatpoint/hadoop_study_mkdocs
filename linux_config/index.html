@@ -240,13 +240,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_3" title="配置免密登录" class="md-nav__link">
+    配置免密登录
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" title="环境安装" class="md-nav__link">
+  <a href="#_4" title="环境安装" class="md-nav__link">
     环境安装
   </a>
   
@@ -266,6 +273,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#_5" title="配置是否启动图形界面" class="md-nav__link">
+    配置是否启动图形界面
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vnc-server" title="安装VNC server （可选）" class="md-nav__link">
     安装VNC server （可选）
   </a>
@@ -274,7 +288,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_5" title="配置防火墙：" class="md-nav__link">
+  <a href="#_6" title="配置防火墙：" class="md-nav__link">
     配置防火墙：
   </a>
   
@@ -369,13 +383,20 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_3" title="配置免密登录" class="md-nav__link">
+    配置免密登录
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#_3" title="环境安装" class="md-nav__link">
+  <a href="#_4" title="环境安装" class="md-nav__link">
     环境安装
   </a>
   
@@ -395,6 +416,13 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#_5" title="配置是否启动图形界面" class="md-nav__link">
+    配置是否启动图形界面
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#vnc-server" title="安装VNC server （可选）" class="md-nav__link">
     安装VNC server （可选）
   </a>
@@ -403,7 +431,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_5" title="配置防火墙：" class="md-nav__link">
+  <a href="#_6" title="配置防火墙：" class="md-nav__link">
     配置防火墙：
   </a>
   
@@ -453,15 +481,60 @@ vi ifcfg-em1
 </code></pre>
 
 <p><img alt="修改网络配置文件" src="../image/修改网络配置文件.jpg" /></p>
-<h3 id="_2">配置主机名</h3>
-<p>设置主机用以便简单标识当前服务器的作用。</p>
-<pre><code>vi /etc/hostname
+<p>根据实际情况修改，供参考：</p>
+<pre><code>TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=static    #使用静态ip
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=em1
+UUID=f85cd7cd-6b63-490e-ae0d-053dc7e0f11a
+DEVICE=em1
+ONBOOT=yes      #启动网络
+ZONE=public
+IPADDR=123.228.23.144       #IP地址
+PREFIX=24
+GATEWAY=123.228.23.254
+DNS1=10.32.244.145
+DNS2=10.32.244.134
+PEERDNS=no
+NM_CONTROLLED=no
 </code></pre>
 
-<h2 id="_3">环境安装</h2>
+<h3 id="_2">配置主机名</h3>
+<p>设置主机用以便简单标识当前服务器的作用。</p>
+<pre><code>//修改用户当前的主机
+vi /etc/hostname
+</code></pre>
+
+<p>修改后重启生效。</p>
+<pre><code>//增加ip的别名，方便ssh连接
+vi /etc/hosts   
+</code></pre>
+
+<h3 id="_3">配置免密登录</h3>
+<pre><code>#生成秘钥
+ssh-keygen -t rsa
+#复制公钥到需要免密的机器目录下
+ssh-copy-id -i ~/.ssh/id_rsa.pub root@192.168.1.100
+</code></pre>
+
+<p>注意写用户名@ip。</p>
+<p>SSH进行认证的过程中除了对用户目录有权限要求外，对 <strong>.ssh</strong> 文件夹和 <strong>authorized_keys</strong> 文件同样也要限制，如果日志中提示这两个的问题，可以通过如下方式进行修改：</p>
+<pre><code>chmod 700 /home/skyler/.ssh 
+chmod 600 /home/skyler/.ssh/authorized_keys
+</code></pre>
+
+<h2 id="_4">环境安装</h2>
 <h3 id="jdk">安装JDK</h3>
 <p>首先获取想要安装的jdk的下载地址：</p>
-<h4 id="_4"><img alt="下载jdk" src="../image/下载jdk.jpg" /></h4>
+<p><img alt="下载jdk" src="../image/下载jdk.jpg" /></p>
 <p>下载jdk，地址替换为上面获取到的地址。</p>
 <pre><code>wget --header &quot;Cookie: oraclelicense=accept-securebackup-cookie&quot; http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm?AuthParam=1536111689_b0a0712c5034d511302f6a0111d70f2b
 </code></pre>
@@ -490,6 +563,20 @@ java -version
 </code></pre>
 
 <hr />
+<h2 id="_5">配置是否启动图形界面</h2>
+<p>新版本的CentOS 系统里使用’targets’ 取代了运行级别的概念。系统有两种默认的’targets’: 多用户.target 对应之前版本的3 运行级别； 而图形.target 对应之前的5运行级别。</p>
+<p>查看默认的target，执行：</p>
+<pre><code>systemctl get-default
+</code></pre>
+
+<p>开机以命令模式启动，执行：</p>
+<pre><code>systemctl set-default multi-user.target
+</code></pre>
+
+<p>开机以图形界面启动，执行：</p>
+<pre><code>systemctl set-default graphical.target
+</code></pre>
+
 <h2 id="vnc-server">安装VNC server （可选）</h2>
 <p>VNC是用于远程控制的工具软件，即可以远程到服务器的图形界面，所以需要linux系统安装有图形界面才会起到作用。</p>
 <p>服务器端需要安装配置VNC server。</p>
@@ -547,7 +634,7 @@ WantedBy=multi-user.target
 <pre><code>systemctl enable vncserver@:1.service
 </code></pre>
 
-<h4 id="_5">配置防火墙：</h4>
+<h4 id="_6">配置防火墙：</h4>
 <p>防火墙可能会拦截掉远程连接，可以选择直接关闭防火墙，或者开放我们需要的连接端口，推荐后者。</p>
 <p>Centos 7 防火墙配置和Centos 6的有很大不同，本文档只针对Centos 7 的配置。</p>
 <p>查看防火墙的状态：</p>
